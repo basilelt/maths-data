@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Jan  8 16:45:29 2024
-
 @author: JDION
 """
 
@@ -9,10 +8,9 @@ Created on Mon Jan  8 16:45:29 2024
 Création de la classe GradientDescent utilisée durant l'intégralité de ce cours
 """
 
+
 class GradientDescent:
-    
     def __init__(self, gradient, learning_rate, max_iterations):
-        
         """
         Initialise l'objet GradientDescent avec les paramètres nécessaires.
 
@@ -21,13 +19,11 @@ class GradientDescent:
         - learning_rate : Taux d'apprentissage (pas) pour la mise à jour des paramètres.
         - max_iterations : Nombre maximal d'itérations de l'algorithme de descente.
         """
-        
         self.gradient = gradient
         self.learning_rate = learning_rate
         self.max_iterations = max_iterations
 
     def descent(self, initial_point):
-        
         """
         Effectue l'algorithme de descente de gradient.
 
@@ -37,11 +33,9 @@ class GradientDescent:
         Retourne :
         - Le point optimal trouvé par l'algorithme.
         """
-        
-        return None # à compléter
+        return None  # TODO à compléter
 
     def update(self, point, gradient_value):
-        
         """
         Met à jour le point en utilisant le gradient et le taux d'apprentissage.
 
@@ -52,7 +46,4 @@ class GradientDescent:
         Retourne :
         - Le nouveau point après la mise à jour.
         """
-        
-        return None # à compléter
-
-
+        return None  # TODO à compléter
