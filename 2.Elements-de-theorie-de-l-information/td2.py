@@ -15,7 +15,7 @@ def F(a, b, x):
     return 1 / (1 + np.exp(-(a * x + b)))
 
 
-def grad_ce(data, a):
+def grad_ce(a, data):
     grad = np.array([0.0, 0.0])
     for x, y in data:
         p = F(a[0], a[1], x)
@@ -32,7 +32,7 @@ plt.scatter(df["Age"], df["Survived"])
 plt.xlabel("Age")
 plt.ylabel("Survived")
 plt.title("Titanic Survival by Age")
-plt.show()
+plt.savefig("titanic_survival_by_age.png")
 
 initial_point = [0, 0]
 initial_point[0], initial_point[1] = rd.randint(1, 90), rd.randint(0, 1)
@@ -46,3 +46,5 @@ gd = GradientDescent(
 )
 
 gd.descent(initial_point=initial_point, data=df.to_numpy())
+
+print(f"Paramètres optimaux: a = {initial_point[0]}, b = {initial_point[1]}")
