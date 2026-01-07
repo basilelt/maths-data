@@ -1,0 +1,5 @@
+Metric,Custom Implementation,Scikit-Learn Implementation
+Training Accuracy,0.9812,0.9993
+Test Accuracy,0.9528,0.9722
+Number of Test Errors,17,10
+Error Rate (%),4.72%,2.78%
