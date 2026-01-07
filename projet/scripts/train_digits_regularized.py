@@ -41,7 +41,12 @@ print(f"Regularized Model - Training Accuracy: {train_accuracy:.4f}")
 print(f"Regularized Model - Test Accuracy: {test_accuracy:.4f}")
 
 # Save the trained model
-with open("trained_model_regularized.pkl", "wb") as f:
+import os
+
+models_dir = os.path.join(os.path.dirname(__file__), "..", "models")
+os.makedirs(models_dir, exist_ok=True)
+model_path = os.path.join(models_dir, "trained_model_regularized.pkl")
+with open(model_path, "wb") as f:
     pickle.dump(model, f)
 
-print("Regularized model saved as 'trained_model_regularized.pkl'")
+print(f"Regularized model saved as '{model_path}'")

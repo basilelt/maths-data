@@ -25,10 +25,14 @@ X_train, X_test, y_train, y_test = train_test_split(
 y_test_labels = np.argmax(y_test, axis=1)
 
 # Load the trained model
-with open("trained_model.pkl", "rb") as f:
+import os
+
+models_dir = os.path.join(os.path.dirname(__file__), "..", "models")
+model_path = os.path.join(models_dir, "trained_model.pkl")
+with open(model_path, "rb") as f:
     model = pickle.load(f)
 
-print("Loaded trained model from 'trained_model.pkl'")
+print(f"Loaded trained model from '{model_path}'")
 
 # ============================================================================
 # 1. PARAMETER INFLUENCE ANALYSIS
@@ -189,7 +193,11 @@ plt.ylabel("Learning Rate")
 plt.title("Test Accuracy Heatmap")
 
 plt.tight_layout()
-plt.savefig("parameter_analysis.png", dpi=300, bbox_inches="tight")
+results_dir = os.path.join(os.path.dirname(__file__), "..", "results")
+os.makedirs(results_dir, exist_ok=True)
+plt.savefig(
+    os.path.join(results_dir, "parameter_analysis.png"), dpi=300, bbox_inches="tight"
+)
 plt.show()
 
 print("Parameter influence analysis completed. Plot saved as 'parameter_analysis.png'")
@@ -218,7 +226,11 @@ plt.colorbar(
 )
 plt.suptitle("Learned Weights Visualization (8x8 pixels per class)")
 plt.tight_layout()
-plt.savefig("coefficient_visualization.png", dpi=300, bbox_inches="tight")
+plt.savefig(
+    os.path.join(results_dir, "coefficient_visualization.png"),
+    dpi=300,
+    bbox_inches="tight",
+)
 plt.show()
 
 print(
@@ -259,7 +271,9 @@ for i in range(num_to_show, 10):
 
 plt.suptitle("Misclassified Test Samples")
 plt.tight_layout()
-plt.savefig("misclassified_samples.png", dpi=300, bbox_inches="tight")
+plt.savefig(
+    os.path.join(results_dir, "misclassified_samples.png"), dpi=300, bbox_inches="tight"
+)
 plt.show()
 
 print("Error analysis completed. Plot saved as 'misclassified_samples.png'")

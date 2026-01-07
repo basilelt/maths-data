@@ -38,7 +38,13 @@ for i, ax in enumerate(axes.flat):
     ax.axis("off")
 
 plt.tight_layout()
-plt.savefig("digits_samples.png", dpi=150, bbox_inches="tight")
+import os
+
+results_dir = os.path.join(os.path.dirname(__file__), "..", "results")
+os.makedirs(results_dir, exist_ok=True)
+plt.savefig(
+    os.path.join(results_dir, "digits_samples.png"), dpi=150, bbox_inches="tight"
+)
 plt.show()
 
 # Preprocessing demonstration
