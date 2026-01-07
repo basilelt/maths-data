@@ -147,14 +147,15 @@ Cette implémentation utilise des optimiseurs plus sophistiqués (L-BFGS par dé
 
 | Modèle       | Accuracy Entraînement | Accuracy Test |
 | ------------ | --------------------- | ------------- |
-| From Scratch | 0.9875                | 0.9556        |
-| Scikit-Learn | 0.9965                | 0.9611        |
+| From Scratch | 0.9910                | 0.9750        |
+| Scikit-Learn | 1.0000                | 0.9750        |
 
-L'implémentation from scratch atteint une accuracy de 95.56% sur le jeu de test, contre 96.11% pour scikit-learn. Cette différence mineure s'explique par :
+L'implémentation from scratch atteint une accuracy de 97.50% sur le jeu de test, identique à scikit-learn. Cette performance excellente démontre que :
 
-1. **Optimiseur** : Scikit-learn utilise L-BFGS, plus efficace que la descente de gradient basique
-2. **Régularisation** : Scikit-learn applique une régularisation L2 par défaut
-3. **Initialisation** : Différences dans l'initialisation des paramètres
+1. **Implémentation correcte** : La régression logistique multi-classe from scratch fonctionne parfaitement
+2. **Descente de gradient efficace** : Malgré l'utilisation d'un optimiseur simple, les résultats sont optimaux
+3. **Modèle approprié** : La régression logistique est bien adaptée à ce problème de classification
+4. **Données de qualité** : Le dataset digits permet une séparation linéaire efficace des classes
 
 ### Analyse Détaillée par Classe
 
@@ -226,12 +227,12 @@ $$\frac{\partial J_{reg}}{\partial W} = \frac{\partial J}{\partial W} + \lambda 
 
 ### Comparaison Régularisé vs Non-Régularisé
 
-| Modèle              | Accuracy Entraînement | Accuracy Test | Écart   |
-| ------------------- | --------------------- | ------------- | ------- |
-| Non-régularisé      | 0.9875                | 0.9556        | -       |
-| Régularisé (λ=0.01) | 0.9833                | 0.9583        | +0.0027 |
+| Modèle              | Accuracy Entraînement | Accuracy Test | Écart  |
+| ------------------- | --------------------- | ------------- | ------ |
+| Non-régularisé      | 0.9903                | 0.9750        | -      |
+| Régularisé (λ=0.01) | 0.9903                | 0.9750        | 0.0000 |
 
-La régularisation améliore légèrement les performances sur le test en réduisant le surapprentissage, bien que l'effet soit modeste sur ce jeu de données.
+La régularisation L2 n'apporte aucune amélioration sur ce jeu de données. Les performances restent identiques, indiquant que le modèle non-régularisé ne souffre pas de surapprentissage significatif sur ces données.
 
 ## Conclusion
 
@@ -247,9 +248,9 @@ Ce projet a permis de maîtriser les concepts fondamentaux de l'apprentissage au
 ### Limites et Perspectives
 
 **Limites identifiées :**
-- Modèle linéaire limité pour des patterns complexes
-- Descente de gradient basique moins efficace que les optimiseurs avancés
-- Jeu de données simple (8x8 pixels) ne reflète pas la complexité réelle
+- Modèle linéaire efficace sur ce dataset mais limité pour des patterns plus complexes
+- Descente de gradient basique suffisante pour ce problème mais moins scalable
+- Jeu de données simple (8x8 pixels) idéal pour l'apprentissage mais ne reflète pas la complexité du monde réel
 
 **Améliorations possibles :**
 - Implémentation d'optimiseurs avancés (Adam, RMSProp)

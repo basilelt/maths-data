@@ -84,6 +84,10 @@ def plot_confusion_matrix(y_true, y_pred, model_name, dataset_type):
     plt.xlabel("Predicted")
     plt.ylabel("True")
     plt.tight_layout()
+    import os
+
+    results_dir = os.path.join(os.path.dirname(__file__), "..", "results")
+    os.makedirs(results_dir, exist_ok=True)
     plt.savefig(
         f'confusion_matrix_{model_name.lower().replace(" ", "_")}_{dataset_type.lower()}.png',
         dpi=300,
