@@ -20,8 +20,8 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y_onehot, test_size=0.2, random_state=42
 )
 
-# Initialize and train the model
-model = MultiClassLogisticRegression(learning_rate=0.01, max_iter=1000)
+# Initialize and train the regularized model
+model = MultiClassLogisticRegression(learning_rate=0.01, max_iter=1000, reg_lambda=0.01)
 model.fit(X_train, y_train)
 
 # Predict on train and test sets
@@ -37,11 +37,11 @@ train_accuracy = accuracy_score(y_train_labels, y_train_pred)
 test_accuracy = accuracy_score(y_test_labels, y_test_pred)
 
 # Print accuracies
-print(f"Training Accuracy: {train_accuracy:.4f}")
-print(f"Test Accuracy: {test_accuracy:.4f}")
+print(f"Regularized Model - Training Accuracy: {train_accuracy:.4f}")
+print(f"Regularized Model - Test Accuracy: {test_accuracy:.4f}")
 
 # Save the trained model
-with open("trained_model.pkl", "wb") as f:
+with open("models/trained_model_regularized.pkl", "wb") as f:
     pickle.dump(model, f)
 
-print("Model saved as 'trained_model.pkl'")
+print("Regularized model saved as 'models/trained_model_regularized.pkl'")
