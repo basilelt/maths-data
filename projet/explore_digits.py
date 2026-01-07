@@ -38,7 +38,7 @@ for i, ax in enumerate(axes.flat):
     ax.axis("off")
 
 plt.tight_layout()
-plt.savefig("results/digits_samples.png", dpi=150, bbox_inches="tight")
+plt.savefig("digits_samples.png", dpi=150, bbox_inches="tight")
 plt.show()
 
 # Preprocessing demonstration

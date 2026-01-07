@@ -85,7 +85,7 @@ def plot_confusion_matrix(y_true, y_pred, model_name, dataset_type):
     plt.ylabel("True")
     plt.tight_layout()
     plt.savefig(
-        f'results/confusion_matrix_{model_name.lower().replace(" ", "_")}_{dataset_type.lower()}.png',
+        f'confusion_matrix_{model_name.lower().replace(" ", "_")}_{dataset_type.lower()}.png',
         dpi=300,
         bbox_inches="tight",
     )

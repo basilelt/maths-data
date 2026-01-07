@@ -25,10 +25,10 @@ X_train, X_test, y_train, y_test = train_test_split(
 y_test_labels = np.argmax(y_test, axis=1)
 
 # Load the trained model
-with open("models/trained_model.pkl", "rb") as f:
+with open("trained_model.pkl", "rb") as f:
     model = pickle.load(f)
 
-print("Loaded trained model from 'models/trained_model.pkl'")
+print("Loaded trained model from 'trained_model.pkl'")
 
 # ============================================================================
 # 1. PARAMETER INFLUENCE ANALYSIS
@@ -189,12 +189,10 @@ plt.ylabel("Learning Rate")
 plt.title("Test Accuracy Heatmap")
 
 plt.tight_layout()
-plt.savefig("results/parameter_analysis.png", dpi=300, bbox_inches="tight")
+plt.savefig("parameter_analysis.png", dpi=300, bbox_inches="tight")
 plt.show()
 
-print(
-    "Parameter influence analysis completed. Plot saved as 'results/parameter_analysis.png'"
-)
+print("Parameter influence analysis completed. Plot saved as 'parameter_analysis.png'")
 
 # ============================================================================
 # 2. COEFFICIENT INTERPRETATION
@@ -220,11 +218,11 @@ plt.colorbar(
 )
 plt.suptitle("Learned Weights Visualization (8x8 pixels per class)")
 plt.tight_layout()
-plt.savefig("results/coefficient_visualization.png", dpi=300, bbox_inches="tight")
+plt.savefig("coefficient_visualization.png", dpi=300, bbox_inches="tight")
 plt.show()
 
 print(
-    "Coefficient interpretation completed. Plot saved as 'results/coefficient_visualization.png'"
+    "Coefficient interpretation completed. Plot saved as 'coefficient_visualization.png'"
 )
 
 # ============================================================================
@@ -261,10 +259,10 @@ for i in range(num_to_show, 10):
 
 plt.suptitle("Misclassified Test Samples")
 plt.tight_layout()
-plt.savefig("results/misclassified_samples.png", dpi=300, bbox_inches="tight")
+plt.savefig("misclassified_samples.png", dpi=300, bbox_inches="tight")
 plt.show()
 
-print("Error analysis completed. Plot saved as 'results/misclassified_samples.png'")
+print("Error analysis completed. Plot saved as 'misclassified_samples.png'")
 
 # Print some statistics about misclassifications
 from collections import Counter
