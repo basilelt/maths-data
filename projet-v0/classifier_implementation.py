@@ -1,11 +1,5 @@
 """
-Multiclass Logistic Regression Classifier - From Scratch Implementation
-Project: Mathématiques pour les Data Sciences
 Authors: Basile LE THIEC, Lilian NOACCO
-Date: January 2026
-
-This script implements a multiclass logistic regression classifier from scratch
-and compares it with scikit-learn's implementation on the digits dataset.
 """
 
 import numpy as np
@@ -20,32 +14,9 @@ import seaborn as sns
 
 
 class LogisticRegressionFromScratch:
-    """
-    Multiclass Logistic Regression using Softmax and Gradient Descent
-
-    Mathematical formulation:
-    - Softmax probability: P(y=k|x) = exp(z_k) / sum(exp(z_j))
-    - Cross-entropy loss: L = -1/m * sum(y * log(y_pred)) + lambda/2m * ||w||^2
-    - Gradient descent update: w = w - alpha * dL/dw
-    """
-
     def __init__(
         self, learning_rate=0.01, n_iterations=1000, lambda_reg=0.0, random_state=None
     ):
-        """
-        Initialize the logistic regression classifier
-
-        Parameters:
-        -----------
-        learning_rate : float
-            Step size for gradient descent (alpha)
-        n_iterations : int
-            Number of iterations for gradient descent
-        lambda_reg : float
-            L2 regularization strength (0 = no regularization)
-        random_state : int, optional
-            Random seed for reproducibility
-        """
         self.learning_rate = learning_rate
         self.n_iterations = n_iterations
         self.lambda_reg = lambda_reg
@@ -56,43 +27,12 @@ class LogisticRegressionFromScratch:
         self.loss_history = []
 
     def softmax(self, z):
-        """
-        Compute softmax probabilities for numerical stability
-        Subtracts max value before exponential to prevent overflow
-
-        Parameters:
-        -----------
-        z : np.array
-            Linear combination of features and weights
-
-        Returns:
-        --------
-        np.array
-            Softmax probabilities (shape: m x n_classes)
-        """
         # Subtract max for numerical stability (prevents overflow)
         z_max = np.max(z, axis=1, keepdims=True)
         exp_z = np.exp(z - z_max)
         return exp_z / np.sum(exp_z, axis=1, keepdims=True)
 
     def cross_entropy_loss(self, y_pred, y_true):
-        """
-        Compute cross-entropy loss with optional L2 regularization
-
-        Loss function: L = -1/m * sum(y * log(y_pred)) + lambda/(2*m) * ||w||^2
-
-        Parameters:
-        -----------
-        y_pred : np.array
-            Predicted probabilities (shape: m x n_classes)
-        y_true : np.array
-            True labels (shape: m,)
-
-        Returns:
-        --------
-        float
-            Cross-entropy loss value
-        """
         m = len(y_true)
 
         # One-hot encode y_true
@@ -112,30 +52,6 @@ class LogisticRegressionFromScratch:
         return loss
 
     def fit(self, X, y):
-        """
-        Train the logistic regression model using gradient descent
-
-        Algorithm:
-        1. Initialize weights and bias to zero
-        2. For each iteration:
-           a. Compute forward pass: z = X*w + b
-           b. Apply softmax: y_pred = softmax(z)
-           c. Compute loss
-           d. Compute gradients: dw = X^T * (y_pred - y_one_hot) / m
-           e. Update: w = w - alpha * dw
-
-        Parameters:
-        -----------
-        X : np.array
-            Feature matrix (shape: m x n_features)
-        y : np.array
-            Target labels (shape: m,)
-
-        Returns:
-        --------
-        self : object
-            Fitted estimator
-        """
         self.classes = np.unique(y)
         n_classes = len(self.classes)
         n_features = X.shape[1]
@@ -186,44 +102,16 @@ class LogisticRegressionFromScratch:
         return self
 
     def predict_proba(self, X):
-        """
-        Predict class probabilities
-
-        Parameters:
-        -----------
-        X : np.array
-            Feature matrix (shape: m x n_features)
-
-        Returns:
-        --------
-        np.array
-            Predicted probabilities (shape: m x n_classes)
-        """
         z = np.dot(X, self.weights) + self.bias
         return self.softmax(z)
 
     def predict(self, X):
-        """
-        Predict class labels
-
-        Parameters:
-        -----------
-        X : np.array
-            Feature matrix (shape: m x n_features)
-
-        Returns:
-        --------
-        np.array
-            Predicted labels (shape: m,)
-        """
         proba = self.predict_proba(X)
         class_indices = np.argmax(proba, axis=1)
         return self.classes[class_indices]
 
 
 def main():
-    """Main execution function"""
-
     print("=" * 60)
     print("Multiclass Logistic Regression Classifier Project")
     print("=" * 60)

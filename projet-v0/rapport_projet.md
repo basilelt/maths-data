@@ -1,5 +1,8 @@
 # Rapport de Projet : Classifieur d'Images par Régression Logistique
 
+Basile LE THIEC
+Lilian NOACCO
+
 ## Résumé Exécutif
 
 Ce projet implémente un classifieur de chiffres manuscrits utilisant la régression logistique multiclasse entraînée par descente de gradient. Nous avons développé une implémentation « from scratch » en Python pur, puis l'avons comparée avec l'implémentation de scikit-learn. Notre modèle personnalisé atteint une précision de test de **95.28%** (17 erreurs sur 360 échantillons de test), tandis que scikit-learn atteint **97.22%** (10 erreurs). Ces résultats montrent que notre implémentation fonctionne correctement et s'approche des performances des algorithmes optimisés de production.
