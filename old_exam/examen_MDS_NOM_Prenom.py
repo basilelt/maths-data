@@ -70,6 +70,7 @@ def read_data():
     housing_data = np.genfromtxt("housing.csv", delimiter=",")
     return housing_data
 
+
 housing_data = read_data()
 
 features_names = [
