@@ -448,7 +448,7 @@ Pour améliorer les performances du classifieur :
 ### A. Configuration de l'Environnement
 
 ```
-Python 3.14
+Python 3.13
 scikit-learn
 numpy
 pandas

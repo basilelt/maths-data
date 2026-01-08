@@ -73,3 +73,8 @@ def read_data():
 
 housing_data = read_data()
 
+X = housing_data[:, :-1]  # Toutes les colonnes sauf la dernière
+y = housing_data[:, -1]   # Seulement la dernière colonne
+scale = StandardScaler()
+X_scaled = scale.fit_transform(X)
+print("\n1.Revenue médian standardisé (1er groupe) :", np.median(y))
