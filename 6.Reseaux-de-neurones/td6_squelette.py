@@ -39,7 +39,7 @@ param = [poids, biais]
 modele.layers[1].set_weights(param)
 
 # Affichage
-X = np.linspace(0, 2, 100).reshape(-1, 1)  # entrée du réseau à compléter
+X = np.linspace(0, 2, 1000).reshape(-1, 1)  # entrée du réseau à compléter
 Y_pred = modele.predict(X)
 plt.plot(X, Y_pred, color="red", label="Sortie du réseau")
 plt.xlabel("x")
@@ -72,11 +72,11 @@ modele2.add(Dense(2, input_dim=1, activation="relu"))  # 1ère couche
 modele2.add(Dense(1, activation="linear"))  # 2ème couche
 
 # Entraînement du réseau par descente de gradient
-modele2.compile(None)  # à compléter
-history = modele2.fit(None)  # à compléter
+modele2.compile(optimizer="sgd", loss="mean_squared_error")
+history = modele2.fit(x_train, y_train, epochs=100, verbose=0)
 
 # Affichage
-X = None  # entrée du réseau à compléter
+X = np.linspace(0, 2, 1000).reshape(-1, 1)  # entrée du réseau à compléter
 Y_pred = modele2.predict(X)
 plt.plot(X, modele.predict(X), color="red", label="Sortie du réseau parfait")
 plt.plot(X, Y_pred, color="blue", label="Sortie du réseau entraîné")
@@ -88,7 +88,7 @@ plt.grid()
 plt.savefig("td6_q5_reseau.png")
 
 # Affichage de l'erreur au fil des époques
-plt.plot(history.history["loss"])
+plt.plot(history.history["loss"], label="erreur")
 plt.xlabel("époques")
 plt.ylabel("erreur")
 plt.legend()
