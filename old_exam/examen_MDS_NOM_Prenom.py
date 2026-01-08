@@ -70,12 +70,24 @@ def read_data():
     housing_data = np.genfromtxt("housing.csv", delimiter=",")
     return housing_data
 
-
 housing_data = read_data()
 
-## Q1
+features_names = [
+    "MedInc",
+    "HouseAge",
+    "AveRooms",
+    "AveBedrms",
+    "Population",
+    "AveOccup",
+    "Latitude",
+    "Longitude",
+]
+
 X = housing_data[:, :-1]  # Toutes les colonnes sauf la dernière
 y = housing_data[:, -1]  # Seulement la dernière colonne
+N = len(y)
+
+## Q1
 scale = StandardScaler()
 X_scaled = scale.fit_transform(X)
 valeur_q1 = X_scaled[0, 0]
@@ -95,5 +107,45 @@ print(f"    Coefficients : [{coefs_str}]")
 x_g1 = X_scaled[0].reshape(1, -1)
 pred_g1 = reg.predict(x_g1)[0]
 vrai_prix = y[0]
+print(f"\nQ3. Prédiction pour le 1er groupe :")
+print(f"    Prix prédit : {pred_g1:.2f}")
+print(f"    Prix réel   : {vrai_prix:.2f}")
+print(
+    "    Commentaire : L'écart (résidu) est normal car le modèle ne passe pas exactement par tous les points."
+)
 
-## Q4
+## Q4a
+alpha = 0.1  # Valeur classique pour voir l'effet
+lasso_reg = Lasso(alpha=alpha)
+lasso_reg.fit(X_scaled, y)
+coefs_lasso_str = ", ".join(["{:.2f}".format(c) for c in lasso_reg.coef_])
+print(f"\nQ4(a). Coefficients Lasso (alpha={alpha}) : [{coefs_lasso_str}]")
+print("       -> Notez que plusieurs coefficients sont tombés à 0.00.")
+
+## Q4b
+n_lambdas = 100
+lambdas = np.logspace(-4, 1, n_lambdas)
+coefs_path = []
+
+for lam in lambdas:
+    l = Lasso(alpha=lam)
+    l.fit(X_scaled, y)
+    coefs_path.append(l.coef_)
+
+# Tracé du graphique
+plt.figure(figsize=(10, 6))
+plt.plot(lambdas, coefs_path)
+plt.xscale("log")  # Echelle logarithmique indispensable
+plt.xlabel("Paramètre de régularisation (Alpha/Lambda)")
+plt.ylabel("Valeur des Coefficients")
+plt.title("Chemin de régularisation LASSO")
+plt.axis("tight")
+plt.grid(True)
+plt.legend(
+    features_names, loc="upper right", fontsize="small"
+)  # Légende pour identifier les courbes
+plt.savefig("lasso_path.png")
+
+print("\nQ4(b). Ordre de grandeur pertinent :")
+print("       Entre 10^-2 et 10^-1. C'est là que les variables inutiles s'annulent")
+print("       mais que la variable principale reste forte.")
