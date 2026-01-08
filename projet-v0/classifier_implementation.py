@@ -13,7 +13,7 @@ import seaborn as sns
 
 
 class LogisticRegressionFromScratch:
-    # init, lr, n_iter, regularisation...
+    # init
     def __init__(self, learning_rate=0.01, n_iterations=1000, reg_lambda=0.0, random_state=None):
         self.learning_rate = learning_rate
         self.n_iterations = n_iterations
@@ -114,7 +114,7 @@ def main():
     print(f"Nb classes: {len(np.unique(y))}")
 
     # split et scaling
-    #print("\nPreprocessing...")
+    print("\n===Preprocessing===")
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42, stratify=y
     )
