@@ -9,9 +9,9 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 
 from keras.layers import Activation
-from keras.utils.generic_utils import get_custom_objects
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+from keras.utils import get_custom_objects
+from keras.models import Sequential
+from keras.layers import Dense
 
 from sklearn.linear_model import LinearRegression, Lasso
 from sklearn.preprocessing import StandardScaler
@@ -23,25 +23,22 @@ def heaviside(x):
     return tf.where(x >= 0, 1.0, 0.0)
 
 
-# Fonction d'activation personnalisée
-get_custom_objects().update({"heaviside": Activation(heaviside)})
-
 # Architecture du réseau
 modele = Sequential()
 
 # Couches de neurones
-modele.add(Dense(None, input_dim=None, activation="heaviside"))  # à compléter
-modele.add(Dense(None, activation="heaviside"))  # à compléter
+modele.add(Dense(2, input_dim=2, activation=heaviside))  # à compléter
+modele.add(Dense(1, activation=heaviside))  # à compléter
 
 # Couche 1
-coeff = np.array(None)  # à compléter
-biais = np.array(None)  # à compléter
+coeff = np.array([[-1.0, 2.0], [3.0, 1.0]])  # à compléter
+biais = np.array([0.0, 0.0])  # à compléter
 poids = [coeff, biais]
 modele.layers[0].set_weights(poids)
 
 # Couche 2
-coeff = np.array(None)  # à compléter
-biais = np.array(None)  # à compléter
+coeff = np.array([[1.0], [1.0]])  # à compléter
+biais = np.array([-2.0])  # à compléter
 poids = [coeff, biais]
 modele.layers[1].set_weights(poids)
 
@@ -98,3 +95,5 @@ print(f"    Coefficients : [{coefs_str}]")
 x_g1 = X_scaled[0].reshape(1, -1)
 pred_g1 = reg.predict(x_g1)[0]
 vrai_prix = y[0]
+
+## Q4
