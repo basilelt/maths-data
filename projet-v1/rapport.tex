@@ -93,8 +93,22 @@ L'ajout de la régularisation L2 a permis à notre modèle d'égaler les perform
 \subsection{Interprétation des Coefficients}
 Les poids ($\mathbf{W}$) appris par le modèle peuvent être visualisés comme des images. Ces images représentent les "templates" que le modèle a appris pour chaque chiffre.
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{coefficients.png}
+    \caption{Coefficients appris pour chaque classe (visualisation des poids comme images 8x8).}
+    \label{fig:coefficients}
+\end{figure}
+
 \subsection{Analyse des Erreurs}
 L'analyse des images mal classées montre souvent des chiffres ambigus ou mal formés, ce qui explique les erreurs du modèle linéaire.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{misclassified.png}
+    \caption{Exemples d'images mal classifiées (prédiction vs étiquette réelle).}
+    \label{fig:misclassified}
+\end{figure}
 
 \subsection{Prise de Recul}
 \begin{itemize}

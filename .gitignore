@@ -1,1 +1,5 @@
 __pycache__
+*.fls
+*.fdb*
+*.aux
+*.log
