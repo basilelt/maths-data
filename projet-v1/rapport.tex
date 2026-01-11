@@ -103,6 +103,22 @@ Le script \texttt{main.py} met en œuvre ce qui suit:
 \end{itemize}
 Notre implémentation atteint des performances identiques à scikit-learn. La régularisation L2 n'a pas amélioré les performances dans ce cas, le meilleur paramètre de régularisation trouvé étant $\alpha = 0.0$.
 
+\subsection{Matrices de Confusion}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{confusion_matrix_custom.png}
+    \caption{Matrice de confusion du modèle personnalisé}
+    \label{fig:cm_custom}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{confusion_matrix_sklearn.png}
+    \caption{Matrice de confusion du modèle scikit-learn}
+    \label{fig:cm_sklearn}
+\end{figure}
+
 \subsection{Réglage des Hyperparamètres par Validation Croisée}
 Pour optimiser les hyperparamètres (\texttt{learning\_rate} et $\alpha$), nous
 avons utilisé une validation croisée à 3 plis. Les meilleurs paramètres trouvés
@@ -150,9 +166,9 @@ formés, ce qui explique les erreurs du modèle linéaire.
 
 Ce projet a permis de mettre en pratique la théorie de la régression
 logistique. L'implémentation \textit{from scratch} a donné d'excellents
-résultats, atteignant les mêmes performances qu'une librairie de référence.
-La régularisation L2 n'a pas été nécessaire dans ce cas pour atteindre
-l'optimal, mais reste un outil important pour prévenir le surapprentissage
-sur des jeux de données plus complexes.
+résultats, atteignant les mêmes performances qu'une librairie de référence. La
+régularisation L2 n'a pas été nécessaire dans ce cas pour atteindre l'optimal,
+mais reste un outil important pour prévenir le surapprentissage sur des jeux de
+données plus complexes.
 
 \end{document}
