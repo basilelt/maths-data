@@ -15,7 +15,6 @@ Ce projet implémente une régression logistique multi-classes from scratch pour
 - `reports/` : Rapport LaTeX
   - `rapport.tex` : Source du rapport
   - `rapport.pdf` : Rapport compilé
-  - `rapport.aux`, `rapport.log` : Fichiers auxiliaires LaTeX
 
 - `results/` : Résultats générés
   - `confusion_matrix_custom.png` : Matrice de confusion du modèle custom
