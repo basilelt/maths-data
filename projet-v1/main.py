@@ -6,8 +6,9 @@ from sklearn.datasets import load_digits
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 import matplotlib.pyplot as plt
+from my_descent import GradientDescent
 
 
 # 1. Traitement initial des données
@@ -34,10 +35,10 @@ def get_data():
 
 # 2. Implémentation from scratch
 class CustomLogisticRegression:
-    def __init__(self, learning_rate=0.01, max_iter=1000, alpha=0.1):
+    def __init__(self, learning_rate=0.01, max_iter=1000, alpha=0.0):
         """
         Initialise le modèle de régression logistique
-        alpha: float, paramètre de régularisation L2
+        alpha: float, paramètre de régularisation L2 (0 pour sans régularisation)
         """
         self.learning_rate = learning_rate
         self.max_iter = max_iter
@@ -53,22 +54,26 @@ class CustomLogisticRegression:
         n_samples, n_features = X.shape
         n_classes = y.shape[1]
 
-        # Initialisation des paramètres
-        self.W = np.zeros((n_classes, n_features))
-        self.b = np.zeros(n_classes)
+        # Taille de theta
+        theta_size = n_classes * n_features + n_classes
+        theta = np.zeros(theta_size)
 
-        # Descente de gradient
-        for _ in range(self.max_iter):
-            z = X @ self.W.T + self.b
+        def gradient(theta):
+            W = theta[: n_classes * n_features].reshape(n_classes, n_features)
+            b = theta[n_classes * n_features :]
+            z = X @ W.T + b
             probs = self._softmax(z)
-
-            # Calcul du gradient avec régularisation L2
-            grad_W = (1 / n_samples) * (probs - y).T @ X + self.alpha * self.W
+            grad_W = (1 / n_samples) * (probs - y).T @ X + self.alpha * W
             grad_b = (1 / n_samples) * np.sum(probs - y, axis=0)
+            return np.concatenate([grad_W.flatten(), grad_b])
 
-            # Mise à jour des paramètres
-            self.W -= self.learning_rate * grad_W
-            self.b -= self.learning_rate * grad_b
+        # Utilisation de la classe GradientDescent
+        descent_obj = GradientDescent(gradient, self.learning_rate, self.max_iter)
+        optimal_theta, _ = descent_obj.descent(theta, taux_erreur=1e-6)
+
+        # Reshape des paramètres optimaux
+        self.W = optimal_theta[: n_classes * n_features].reshape(n_classes, n_features)
+        self.b = optimal_theta[n_classes * n_features :]
 
     def predict(self, X):
         z = X @ self.W.T + self.b
@@ -102,6 +107,12 @@ print("\n### Results Comparison ###")
 print(f"Custom Model Test Accuracy:   {accuracy_custom:.4f}")
 print(f"Scikit-learn Model Test Accuracy: {accuracy_sklearn:.4f}")
 
+# Matrices de confusion
+print("\nConfusion Matrix Custom Model:")
+print(confusion_matrix(y_test, y_pred_custom))
+print("\nConfusion Matrix Scikit-learn Model:")
+print(confusion_matrix(y_test, y_pred_sklearn))
+
 # 5. BONUS: Implémentation avec Régularisation L2
 print("\n### Bonus: L2 Regularization ###")
 print("Training custom model with L2 regularization...")
@@ -112,6 +123,30 @@ y_pred_regularized = regularized_model.predict(X_test)
 accuracy_regularized = accuracy_score(y_test, y_pred_regularized)
 print(f"Regularized Custom Model Test Accuracy: {accuracy_regularized:.4f}")
 
+# 5.5 Analyse de l'influence des paramètres
+print("\n### Parameter Influence Analysis ###")
+
+# Influence du learning_rate
+learning_rates = [0.001, 0.01, 0.1]
+lr_accuracies = []
+for lr in learning_rates:
+    model = CustomLogisticRegression(learning_rate=lr, alpha=0.0)
+    model.fit(X_train, y_train_onehot)
+    pred = model.predict(X_test)
+    acc = accuracy_score(y_test, pred)
+    lr_accuracies.append(acc)
+print(f"Test accuracies for learning_rates {learning_rates}: {lr_accuracies}")
+
+# Influence de la régularisation
+alphas = [0.0, 0.01, 0.1]
+alpha_accuracies = []
+for alpha in alphas:
+    model = CustomLogisticRegression(alpha=alpha)
+    model.fit(X_train, y_train_onehot)
+    pred = model.predict(X_test)
+    acc = accuracy_score(y_test, pred)
+    alpha_accuracies.append(acc)
+print(f"Test accuracies for alphas {alphas}: {alpha_accuracies}")
 
 # 6. Analyse des résultats
 print("\n### Results Analysis ###")
