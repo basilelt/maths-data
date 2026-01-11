@@ -3,3 +3,5 @@ __pycache__
 *.fdb*
 *.aux
 *.log
+*.dvi
+.DS_Store
