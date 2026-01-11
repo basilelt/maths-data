@@ -1,6 +1,7 @@
 # Basile LE THIEC & Lilian NOACCO
 # 2A Alt IR
 
+import os
 import numpy as np
 from sklearn.datasets import load_digits, fetch_openml
 from sklearn.model_selection import train_test_split
@@ -16,6 +17,11 @@ from sklearn.model_selection import StratifiedKFold
 import matplotlib.pyplot as plt
 from my_descent import GradientDescent
 from tqdm import tqdm
+
+# Get the directory of the current script
+script_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(script_dir)
+results_dir = os.path.join(project_root, 'results')
 
 
 # 1. Traitement initial des données
@@ -161,13 +167,13 @@ print(confusion_matrix(y_test, y_pred_sklearn))
 fig, ax = plt.subplots(figsize=(8, 6))
 ConfusionMatrixDisplay.from_predictions(y_test, y_pred_custom, ax=ax, cmap="Blues")
 plt.title("Matrice de Confusion - Modèle Personnalisé")
-plt.savefig("confusion_matrix_custom.png")
+plt.savefig(os.path.join(results_dir, "confusion_matrix_custom.png"))
 plt.close()
 
 fig, ax = plt.subplots(figsize=(8, 6))
 ConfusionMatrixDisplay.from_predictions(y_test, y_pred_sklearn, ax=ax, cmap="Blues")
 plt.title("Matrice de Confusion - Modèle Scikit-learn")
-plt.savefig("confusion_matrix_sklearn.png")
+plt.savefig(os.path.join(results_dir, "confusion_matrix_sklearn.png"))
 plt.close()
 
 # 5. BONUS: Implémentation avec Régularisation L2
@@ -197,7 +203,7 @@ for i, ax in enumerate(axes.flat):
     ax.set_title(f"Classe {i}")
     ax.axis("off")
 plt.suptitle("Coefficients appris pour chaque classe")
-plt.savefig("coefficients.png")
+plt.savefig(os.path.join(results_dir, "coefficients.png"))
 plt.close()
 
 # Analyse des erreurs
@@ -219,7 +225,7 @@ if len(misclassified_indices) > 0:
         ax.set_title(f"Préd: {y_pred_custom[idx]}, Vrai: {y_test[idx]}")
         ax.axis("off")
     plt.suptitle("Images mal classifiées")
-    plt.savefig("misclassified.png")
+    plt.savefig(os.path.join(results_dir, "misclassified.png"))
     plt.close()
 else:
     print("\nAucune image mal classifiée à afficher.")
