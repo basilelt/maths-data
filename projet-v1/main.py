@@ -98,12 +98,12 @@ accuracy_sklearn = accuracy_score(y_test, y_pred_sklearn)
 print("Scikit-learn model training finished.")
 
 # 4. Comparaison des résultats
-print("\n--- Results Comparison ---")
+print("\n### Results Comparison ###")
 print(f"Custom Model Test Accuracy:   {accuracy_custom:.4f}")
 print(f"Scikit-learn Model Test Accuracy: {accuracy_sklearn:.4f}")
 
 # 5. BONUS: Implémentation avec Régularisation L2
-print("\n--- Bonus: L2 Regularization ---")
+print("\n### Bonus: L2 Regularization ###")
 print("Training custom model with L2 regularization...")
 # Utilisation d'un alpha pour la régularisation
 regularized_model = CustomLogisticRegression(alpha=0.01)
@@ -114,7 +114,7 @@ print(f"Regularized Custom Model Test Accuracy: {accuracy_regularized:.4f}")
 
 
 # 6. Analyse des résultats
-print("\n--- Results Analysis ---")
+print("\n### Results Analysis ###")
 
 # Interprétation des coefficients
 fig, axes = plt.subplots(2, 5, figsize=(10, 4))
@@ -125,7 +125,8 @@ for i, ax in enumerate(axes.flat):
     ax.set_title(f"Classe {i}")
     ax.axis("off")
 plt.suptitle("Coefficients appris pour chaque classe")
-plt.show()
+plt.savefig("coefficients.png")
+plt.close()
 
 # Analyse des erreurs
 misclassified_indices = np.where(y_test != y_pred_custom)[0]
@@ -146,7 +147,8 @@ if len(misclassified_indices) > 0:
         ax.set_title(f"Préd: {y_pred_custom[idx]}, Vrai: {y_test[idx]}")
         ax.axis("off")
     plt.suptitle("Images mal classifiées")
-    plt.show()
+    plt.savefig("misclassified.png")
+    plt.close()
 else:
     print("\nNo misclassified images to display.")
 
