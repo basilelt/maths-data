@@ -2,13 +2,15 @@
 # 2A Alt IR
 
 import numpy as np
-from sklearn.datasets import load_digits
+from sklearn.datasets import load_digits, fetch_openml
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+from sklearn.model_selection import StratifiedKFold
 import matplotlib.pyplot as plt
 from my_descent import GradientDescent
+from tqdm import tqdm
 
 
 # 1. Traitement initial des données
@@ -18,17 +20,15 @@ def get_data():
     X = digits.data
     y = digits.target
 
-    # Encodage one-hot des étiquettes pour le modèle personnalisé
-    encoder = OneHotEncoder(sparse_output=False)
-    y_onehot = encoder.fit_transform(y.reshape(-1, 1))
-
     # Division des données
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
-    X_train_onehot, X_test_onehot, y_train_onehot, y_test_onehot = train_test_split(
-        X, y_onehot, test_size=0.2, random_state=42
-    )
+
+    # Encodage one-hot des étiquettes pour le modèle personnalisé
+    encoder = OneHotEncoder(sparse_output=False)
+    y_train_onehot = encoder.fit_transform(y_train.reshape(-1, 1))
+    y_test_onehot = encoder.transform(y_test.reshape(-1, 1))
 
     return X_train, X_test, y_train, y_test, y_train_onehot, y_test_onehot
 
@@ -81,14 +81,51 @@ class CustomLogisticRegression:
         return np.argmax(probs, axis=1)
 
 
+# Fonction pour le réglage des hyperparamètres par validation croisée
+def tune_hyperparameters(X, y_onehot, param_grid):
+    best_params = None
+    best_score = 0
+    kf = StratifiedKFold(n_splits=3, shuffle=True, random_state=42)
+    y_labels = np.argmax(y_onehot, axis=1)
+
+    total_combinations = len(param_grid['learning_rate']) * len(param_grid['alpha'])
+    
+    with tqdm(total=total_combinations * 3, desc="Hyperparameter Tuning") as pbar:
+        for lr in param_grid['learning_rate']:
+            for alpha in param_grid['alpha']:
+                scores = []
+                for train_idx, val_idx in kf.split(X, y_labels):
+                    X_train_fold, X_val_fold = X[train_idx], X[val_idx]
+                    y_train_fold, y_val_fold = y_onehot[train_idx], y_onehot[val_idx]
+                    model = CustomLogisticRegression(learning_rate=lr, alpha=alpha, max_iter=200)
+                    model.fit(X_train_fold, y_train_fold)
+                    pred = model.predict(X_val_fold)
+                    acc = accuracy_score(np.argmax(y_val_fold, axis=1), pred)
+                    scores.append(acc)
+                    pbar.update(1)  # Update progress for each fold
+                avg_score = np.mean(scores)
+                if avg_score > best_score:
+                    best_score = avg_score
+                    best_params = {'learning_rate': lr, 'alpha': alpha}
+    print(f"Best params found: {best_params}, CV score: {best_score:.4f}")
+    return best_params, best_score
+
+
 ## Script principal
 
 # Obtenir les données
 X_train, X_test, y_train, y_test, y_train_onehot, y_test_onehot = get_data()
 
-# Entraîner et évaluer le modèle "from scratch"
+# Réglage des hyperparamètres par validation croisée
+param_grid = {"learning_rate": [0.001, 0.01, 0.1], "alpha": [0.0, 0.01, 0.1]}
+best_params, best_cv_score = tune_hyperparameters(X_train, y_train_onehot, param_grid)
+print(f"Best params from CV: {best_params}, CV score: {best_cv_score:.4f}")
+
+# Entraîner et évaluer le modèle "from scratch" avec les meilleurs paramètres
 print("Training custom model...")
-custom_model = CustomLogisticRegression()
+custom_model = CustomLogisticRegression(
+    learning_rate=best_params["learning_rate"], alpha=best_params["alpha"]
+)
 custom_model.fit(X_train, y_train_onehot)
 y_pred_custom = custom_model.predict(X_test)
 accuracy_custom = accuracy_score(y_test, y_pred_custom)
@@ -116,37 +153,15 @@ print(confusion_matrix(y_test, y_pred_sklearn))
 # 5. BONUS: Implémentation avec Régularisation L2
 print("\n### Bonus: L2 Regularization ###")
 print("Training custom model with L2 regularization...")
-# Utilisation d'un alpha pour la régularisation
-regularized_model = CustomLogisticRegression(alpha=0.01)
+# Utilisation du meilleur alpha trouvé
+regularized_model = CustomLogisticRegression(
+    learning_rate=best_params["learning_rate"], alpha=best_params["alpha"]
+)
 regularized_model.fit(X_train, y_train_onehot)
 y_pred_regularized = regularized_model.predict(X_test)
 accuracy_regularized = accuracy_score(y_test, y_pred_regularized)
 print(f"Regularized Custom Model Test Accuracy: {accuracy_regularized:.4f}")
 
-# 5.5 Analyse de l'influence des paramètres
-print("\n### Parameter Influence Analysis ###")
-
-# Influence du learning_rate
-learning_rates = [0.001, 0.01, 0.1]
-lr_accuracies = []
-for lr in learning_rates:
-    model = CustomLogisticRegression(learning_rate=lr, alpha=0.0)
-    model.fit(X_train, y_train_onehot)
-    pred = model.predict(X_test)
-    acc = accuracy_score(y_test, pred)
-    lr_accuracies.append(acc)
-print(f"Test accuracies for learning_rates {learning_rates}: {lr_accuracies}")
-
-# Influence de la régularisation
-alphas = [0.0, 0.01, 0.1]
-alpha_accuracies = []
-for alpha in alphas:
-    model = CustomLogisticRegression(alpha=alpha)
-    model.fit(X_train, y_train_onehot)
-    pred = model.predict(X_test)
-    acc = accuracy_score(y_test, pred)
-    alpha_accuracies.append(acc)
-print(f"Test accuracies for alphas {alphas}: {alpha_accuracies}")
 
 # 6. Analyse des résultats
 print("\n### Results Analysis ###")
@@ -186,6 +201,37 @@ if len(misclassified_indices) > 0:
     plt.close()
 else:
     print("\nNo misclassified images to display.")
+
+# 8. BONUS: Test sur MNIST
+print("\n### Bonus: Testing on MNIST ###")
+print("Loading MNIST dataset...")
+mnist = fetch_openml("mnist_784", version=1, as_frame=False)
+X_mnist = mnist.data.astype(np.float32) / 255.0  # Normalisation
+y_mnist = mnist.target.astype(int)
+
+# Utiliser un sous-ensemble pour la rapidité
+X_mnist_small, _, y_mnist_small, _ = train_test_split(
+    X_mnist, y_mnist, train_size=10000, random_state=42, stratify=y_mnist
+)
+X_train_mnist, X_test_mnist, y_train_mnist, y_test_mnist = train_test_split(
+    X_mnist_small, y_mnist_small, test_size=0.2, random_state=42, stratify=y_mnist_small
+)
+
+# Encodage one-hot
+encoder_mnist = OneHotEncoder(sparse_output=False)
+y_train_mnist_onehot = encoder_mnist.fit_transform(y_train_mnist.reshape(-1, 1))
+y_test_mnist_onehot = encoder_mnist.transform(y_test_mnist.reshape(-1, 1))
+
+print("Training custom model on MNIST...")
+mnist_model = CustomLogisticRegression(
+    learning_rate=best_params["learning_rate"],
+    alpha=best_params["alpha"],
+    max_iter=2000,
+)  # Augmenter max_iter pour MNIST
+mnist_model.fit(X_train_mnist, y_train_mnist_onehot)
+y_pred_mnist = mnist_model.predict(X_test_mnist)
+accuracy_mnist = accuracy_score(y_test_mnist, y_pred_mnist)
+print(f"MNIST Test Accuracy: {accuracy_mnist:.4f}")
 
 # 7. Prise de recul
 print("\nReflection")

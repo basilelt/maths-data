@@ -22,6 +22,8 @@ class GradientDescent:
         - learning_rate : Taux d'apprentissage (pas) pour la mise à jour des paramètres.
         - max_iterations : Nombre maximal d'itérations de l'algorithme de descente.
         """
+        # Note: This class is based on the GradientDescent from TD1, with added early stopping
+        # for better convergence control (stops when gradient norm < threshold).
 
         self.gradient = gradient
         self.learning_rate = learning_rate
