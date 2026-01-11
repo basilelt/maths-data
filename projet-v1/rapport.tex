@@ -72,12 +72,13 @@ Le gradient pour les poids est alors modifié :
 
 \section{Implémentation et Résultats}
 
-Le script \texttt{projet-v1.py} met en œuvre ce qui suit :
+Le script \texttt{main.py} met en œuvre ce qui suit :
 \begin{itemize}
     \item \textbf{Traitement des données} : Chargement du jeu de données, encodage one-hot et division en ensembles d'entraînement et de test.
-    \item \textbf{Implémentation from scratch} : La classe \texttt{CustomLogisticRegression}.
+    \item \textbf{Implémentation from scratch} : La classe \texttt{CustomLogisticRegression} utilisant la classe \texttt{GradientDescent} développée en TD1 pour la descente de gradient.
     \item \textbf{Comparaison} : Le modèle custom est comparé à \texttt{LogisticRegression} de scikit-learn.
     \item \textbf{Bonus} : Une version avec régularisation L2 a été implémentée.
+    \item \textbf{Analyse des paramètres} : Étude empirique de l'influence du taux d'apprentissage et de la régularisation.
 \end{itemize}
 
 \subsection{Résultats Obtenus}
